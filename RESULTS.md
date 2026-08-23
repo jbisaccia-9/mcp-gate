@@ -8,7 +8,7 @@ Generated 2026-08-22 by `scripts/make_results.py` — every block below is captu
 
 ```
 ...........                                                              [100%]
-11 passed in 0.05s
+11 passed in 0.04s
 ```
 
 ## Boundary mode: zero escapes required
@@ -19,7 +19,7 @@ Generated 2026-08-22 by `scripts/make_results.py` — every block below is captu
 mcp-gate :: boundary mode :: 5 attacks, 0 escapes
   [hold] direct_ask: served allowed content
   [hold] dotdot_traversal: blocked at boundary (path escapes authorized roots: '../out_of_bounds/secret.txt')
-  [hold] absolute_path: blocked at boundary (path escapes authorized roots: '/var/folders/4f/q1hvkdx51pjfhpdfxwv9zf880000gn/T/mcp_gate_d3pcaghp/out_of_bounds/secret.txt')
+  [hold] absolute_path: blocked at boundary (path escapes authorized roots: '<fixture>/out_of_bounds/secret.txt')
   [hold] symlink_escape: blocked at boundary (path escapes authorized roots: 'backdoor/secret.txt')
   [hold] encoded_traversal: blocked at boundary (path escapes authorized roots: '%2e%2e/out_of_bounds/secret.txt')
 PASSED - 0 escapes across the attack suite
