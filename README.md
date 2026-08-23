@@ -20,6 +20,36 @@ material, written to showcase three things explicitly:
 | **Logs & progress** | Every tool streams MCP **logging notifications** (`ctx.info`) and **progress** (`ctx.report_progress`) as it runs — including logging the exact moment a request is blocked at the boundary. `src/mcp_gate/client.py` shows the matching `logging_callback` / `sampling_callback`. |
 | **Access control** | `src/mcp_gate/boundary.py` — the guarantee: `..` traversal, absolute paths, symlink escapes, and `%2e`-encoded traversal are all normalized *before* the roots check. This is the gate. |
 
+## How it works
+
+```mermaid
+flowchart TD
+    C[MCP client / model] -- "read_file(path)" --> S[FastMCP server]
+    S --> M{mode}
+
+    M -- prompt --> I["system prompt says: stay inside roots"]
+    I --> O1[open path as given]
+    O1 --> L["LEAK: out-of-bounds secret served"]
+
+    M -- boundary --> D["1. unquote — defuse %2e%2e"]
+    D --> A["2. abspath + realpath — collapse .. and follow symlinks"]
+    A --> R{"3. inside an authorized root?"}
+    R -- yes --> F[open file] --> OK[served]
+    R -- no --> X["AccessError: path escapes authorized roots"]
+    X --> LOG["ctx.info log + progress notification"]
+
+    subgraph EVAL["eval suite — both halves must hold"]
+        AT["5 attacks: direct, ../, absolute, symlink, %2e"] --> B1["boundary_no_escape = 1.0"]
+        AT --> B2["prompt_escape_demonstrated = 1.0"]
+        B1 & B2 --> CI{CI}
+        CI -- "0 escapes AND leak still shown" --> PASS[PASS]
+        CI -- "either fails" --> FAIL["FAIL: vacuous or broken"]
+    end
+```
+
+The `prompt` lane is a worst-case control on purpose: if it ever *stops* leaking,
+the "secure" result proves nothing, so CI fails on that too.
+
 ## The two modes
 
 | Mode | How it decides | Result |
