@@ -66,10 +66,13 @@ def run_attacks(mode: str):
                 detail = "served the out-of-bounds secret" if leaked \
                     else "served allowed content"
             except AccessError as exc:
-                detail = f"blocked at boundary ({exc})"
+                # Report paths relative to the fixture so captured output is
+                # machine-independent: the temp dir is real, its name is noise.
+                detail = f"blocked at boundary ({str(exc).replace(str(tmp), '<fixture>')})"
             except FileNotFoundError:
                 detail = "not found"
-            results.append({**atk, "leaked": leaked, "detail": detail})
+            shown = atk["path"].replace(str(tmp), "<fixture>")
+            results.append({**atk, "path": shown, "leaked": leaked, "detail": detail})
         return results
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
