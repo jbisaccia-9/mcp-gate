@@ -1,0 +1,4 @@
+# Core gate + CI need nothing beyond the stdlib and pytest (see pyproject [dev]).
+# These are only for the live MCP demo (server.py / client.py):
+mcp[cli]>=1.9.3
+anthropic>=0.51.0

@@ -1,0 +1,6 @@
+Project notes
+==============
+
+Nothing sensitive here. This file lives inside the authorized sandbox root, so a
+correctly-configured MCP server is allowed to read it. It exists so the "direct
+ask" case has a legitimate file to return.

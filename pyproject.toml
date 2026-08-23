@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-gate"
+version = "0.1.0"
+description = "A path is a request; the roots boundary is the guarantee - proven by a test suite"
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+dev = ["pytest"]
+# Only needed to run the live MCP server/client demo (not the gate or CI).
+demo = ["mcp[cli]>=1.9.3", "anthropic>=0.51.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
